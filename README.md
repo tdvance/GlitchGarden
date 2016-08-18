@@ -1,5 +1,5 @@
 # GlitchGarden
-A basic clone of the popular Plants vs. Zombies using assets from a defunct game "Glitch" that were released to the community (http://www.glitchthegame.com/downloads/).
+A basic clone of the popular Plants vs. Zombies using assets from a defunct game "Glitch" that were released to the community (http://www.glitchthegame.com/).
 
 * The object of the game is to stop animals from entering your house.
 
