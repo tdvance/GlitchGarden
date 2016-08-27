@@ -1,28 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
+using Assets.Menu.Scripts;
 
-public class Game : MonoBehaviour {
-    public Text scoreText;
 
-	// Use this for initialization
-	void Start () {
-    }
-	
-	// Update is called once per frame
-	void Update () {
+public class Game : SceneScript {
+
+    public Text score;
+
+	override public void AfterStart () {
+        ScoreManager.instance.Reset();
 	}
 
-    public void ScoreTenPoints()
-    {
-        Debug.Log("ScoreTenPoints called from " + name);
-        ScoreManager.instance.Add(10);
-        scoreText.text = "Score: " + ScoreManager.instance.score;
-    }
+    override public void AfterUpdate () {
+        score.text = "Score:" + string.Format("{0,10}", ScoreManager.instance.score);
+	}
 
     public void GameOver()
     {
-        Debug.Log("GameOver called from " + name);
-        ScoreManager.instance.UpdateHighScores();
+        HighScores.instance.saveHighScores();
+    }
+
+    override public void BeforeLeavingScene(NavType which)
+    {
+        switch (which)
+        {
+            case NavType.Title:
+            case NavType.Win:
+            case NavType.Lose:
+                GameOver();
+                break;
+            default:
+                break;
+        }
     }
 }

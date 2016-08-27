@@ -1,26 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets;
+using System;
+using UnityEngine.SceneManagement;
 
-
-
-public class Init : MonoBehaviour {
-
-    public string titleScreen = "TitleScreen";
-
+public class Init : SceneScript {
 
     // Use this for initialization
-    void Start () {
-        Invoke("LoadTitleScreen", 2.7f);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+    override public void AfterStart () {
+
 	}
 
-    void LoadTitleScreen()
-    {
-        LevelManager.instance.LoadLevel(titleScreen);
-
-    }
+    // Update is called once per frame
+    override public void AfterUpdate () {
+	
+	}
+    
 }

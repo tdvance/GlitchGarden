@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: d2e5469b11b0d1e488c0ba87ab979b28
-timeCreated: 1471711575
+guid: b1bd857c9d372764ca70579b50afbbbd
+timeCreated: 1472167943
 licenseType: Free
 TrueTypeFontImporter:
   serializedVersion: 4
@@ -12,9 +12,7 @@ TrueTypeFontImporter:
   fontNames:
   - Hack
   fallbackFontReferences:
-  - {fileID: 12800000, guid: 7deea375c330a664fae17d328d73cc9c, type: 3}
-  - {fileID: 12800000, guid: b9ff987987cf24643b6050a0045e9884, type: 3}
-  - {fileID: 12800000, guid: 435e4f5b0d0a9a14cb615299afb0c5f6, type: 3}
+  - {fileID: 12800000, guid: 7317dc7f7d4f8c2468ac307221b654cb, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

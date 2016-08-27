@@ -1,122 +1,148 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
-public class Navigation : MonoBehaviour {
+public class Navigation : MonoBehaviour
+{
+    public float minX = 2f;
+    public float maxX = 14f;
+    public float minY = 0f;
+    public float maxY = 9f;
+    public float buttonHeight = 0.8f;
+    public float buttonWidth = 0.8f;
 
-    public string next = "";
-    public string back = "";
-    public string options = "";
-    public string play = "";
-    public string resetToDefaults = "";
-    public string win = "";
-    public string lose = "";
+    public GameObject buttonPrefab;
+    public GameObject navigation;
+    public SceneScript sceneScript = null;
 
-    
-    public float duration = 10f;
-
-	// Use this for initialization
-	void Start () {
-
-        if (duration >= 0)
-        {
-            Invoke("Next", duration);
-        }
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-    public void Back()
+    [Tooltip("Navigational Buttons needed in this scene, from left to right")]
+    public NavButton[] buttons = new NavButton[]
     {
-        CancelInvoke("Next");
-        Debug.Log("Back from: " + name);
-        if (back != "")
+        new NavButton("Back"),
+        new NavButton("Forward"),
+        new NavButton("Play"),
+        new NavButton("Options"),
+        new NavButton("Title"),
+        new NavButton("Win"),
+        new NavButton("Lose"),
+        new NavButton("Score"),
+    };
+
+    // Use this for initialization
+    void Start()
+    {
+        if (sceneScript == null)
         {
-            LevelManager.instance.LoadLevel(back);
+            sceneScript = FindObjectOfType<SceneScript>();
+            Debug.Log("Found scene script: " + sceneScript);
         }
-        else
+
+        int numButtons = buttons.Length;
+        float firstButton = minX + buttonWidth / 2f;
+        float lastButton = maxX - buttonWidth / 2f;
+
+        for (int i = 0; i < numButtons; i++)
         {
-            LevelManager.instance.LoadLevel(LevelManager.instance.getLastScene());
+           
+            float t = numButtons == 1 ? 0.5f : (float)i / (numButtons - 1f);
+            float x = (1f - t) * firstButton + t * lastButton;
+            float y = minY + buttonHeight / 2f;
+            GameObject b = Instantiate(buttonPrefab, new Vector3(x, y),
+           Quaternion.identity) as GameObject;
+            b.transform.SetParent(navigation.transform);
+            Button button = b.GetComponent<Button>();
+            if (buttons[i].enabled)
+            {
+
+                switch (buttons[i].name)
+                {
+                    case "Back":
+                        button.onClick.AddListener(new UnityEngine.Events.UnityAction(Back));
+                        break;
+                    case "Forward":
+                        button.onClick.AddListener(new UnityEngine.Events.UnityAction(Forward));
+                        break;
+                    case "Play":
+                        button.onClick.AddListener(new UnityEngine.Events.UnityAction(Play));
+                        break;
+                    case "Options":
+                        button.onClick.AddListener(new UnityEngine.Events.UnityAction(Options));
+                        break;
+                    case "Title":
+                        button.onClick.AddListener(new UnityEngine.Events.UnityAction(Title));
+                        break;
+                    case "Win":
+                        button.onClick.AddListener(new UnityEngine.Events.UnityAction(Win));
+                        break;
+                    case "Lose":
+                        button.onClick.AddListener(new UnityEngine.Events.UnityAction(Lose));
+                        break;
+                    case "Score":
+                        button.onClick.AddListener(new UnityEngine.Events.UnityAction(Score));
+                        break;
+                    default:
+                        Debug.LogError("Unknown button type: " + buttons[i].name + " at index: " + i);
+                        break;
+                }
+            }else
+            {
+                button.interactable = false;
+            }
+            button.image.sprite = buttons[i].sprite;
         }
     }
 
-    public void Next()
+    void Back()
     {
-        CancelInvoke("Next");
-        Debug.Log("Next from: " + name);
-        if (next != "")
-        {
-            LevelManager.instance.LoadLevel(next);
-        }
-       //otherwise, do nothing, at a "pendant" node of the state graph
-
+        Debug.Log("Back");
+        sceneScript.LoadPreviousScene();
     }
 
-    public void Play()
+    void Forward()
     {
-        CancelInvoke("Next");
-        Debug.Log("Play from: " + name);
-        ScoreManager.instance.Reset();
-        if (play != "")
-        {
-            LevelManager.instance.LoadLevel(play);
-        }
-        else
-        {
-            LevelManager.instance.LoadGame();
-        }
+        Debug.Log("Forward");
+        sceneScript.LoadNextScene();
     }
 
-    public void Win()
+    void Play()
     {
-        CancelInvoke("Next");
-        Debug.Log("Win from: " + name);
-        if (win != "")
-        {
-            LevelManager.instance.LoadLevel(win);
-        }
-        else
-        {
-            LevelManager.instance.LoadGame();
-        }
+        Debug.Log("Play");
+        sceneScript.LoadGameScene();
     }
 
-    public void Lose()
+    void Options()
     {
-        CancelInvoke("Next");
-        Debug.Log("Lose from: " + name);
-        if (lose != "")
-        {
-            LevelManager.instance.LoadLevel(lose);
-        }
-        else
-        {
-            LevelManager.instance.LoadGame();
-        }
+        Debug.Log("Options");
+        sceneScript.LoadOptionsScene();
     }
 
-    public void Options()
+    void Title()
     {
-        CancelInvoke("Next");
-        Debug.Log("Options from: " + name);
-        if (options != "")
-        {
-            LevelManager.instance.LoadLevel(options);
-        }
-        else
-        {
-            LevelManager.instance.LoadOptions();
-        }
+        Debug.Log("Title");
+        sceneScript.LoadTitleScene();
     }
 
-    public void ResetToDefaults()
+    void Win()
     {
-        CancelInvoke("Next");
-        Debug.Log("ResetToDefaults from: " + name);
+        Debug.Log("Win");
+        sceneScript.LoadWinScene();
+    }
 
-        //TODO fill in this code
+    void Lose()
+    {
+        Debug.Log("Lose");
+        sceneScript.LoadLoseScene();
+    }
+    void Score()
+    {
+        Debug.Log("Score");
+        ScoreManager.instance.addPoints(10);
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
 
     }
 }
