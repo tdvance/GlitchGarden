@@ -168,13 +168,60 @@ public class LevelManager : MonoBehaviour
     {
 
     }
+    [Tooltip("This must be kept in sync with scene list in build settings for build/build and run to work.")]
+    public string[] scenePathsByBuildIndex;
 
     void AfterAwake()
     {
-        scenes = new SceneInfo[UnityEditor.EditorBuildSettings.scenes.Length];
-        for (int i = 0; i < UnityEditor.EditorBuildSettings.scenes.Length; i++)
+#if UNITY_EDITOR
+
+        bool resyncNeeded = false;
+        string resyncReason = "";
+        if (Application.isEditor)
         {
-            scenes[i] = new SceneInfo(UnityEditor.EditorBuildSettings.scenes[i].path, i);
+            if (scenePathsByBuildIndex == null || UnityEditor.EditorBuildSettings.scenes.Length != scenePathsByBuildIndex.Length)
+            {
+                resyncNeeded = true;
+                if (scenePathsByBuildIndex == null)
+                {
+                    resyncReason = "scenePathsByBuildIndex is null";
+                }
+                else
+                {
+                    resyncReason = "Build settings scenes length is " + UnityEditor.EditorBuildSettings.scenes.Length
+                        + ", but scenePathsByBuildIndex length is " + scenePathsByBuildIndex.Length;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < UnityEditor.EditorBuildSettings.scenes.Length; i++)
+                {
+                    if (UnityEditor.EditorBuildSettings.scenes[i].path != scenePathsByBuildIndex[i])
+                    {
+                        resyncNeeded = true;
+                        resyncReason = "Scene at index " + i + " in build settings is " +
+                            UnityEditor.EditorBuildSettings.scenes[i].path + ", but in scenePathsByBuildIndex, it is "
+                            + scenePathsByBuildIndex[i];
+                        break;
+                    }
+                }
+            }
+            if (resyncNeeded)
+            {
+                Debug.LogError(resyncReason);
+                scenePathsByBuildIndex = new string[UnityEditor.EditorBuildSettings.scenes.Length];
+                for (int i = 0; i < UnityEditor.EditorBuildSettings.scenes.Length; i++)
+                {
+                    scenePathsByBuildIndex[i] = UnityEditor.EditorBuildSettings.scenes[i].path;
+                }
+            }
+        }
+#endif
+
+        scenes = new SceneInfo[scenePathsByBuildIndex.Length];
+        for (int i = 0; i < scenePathsByBuildIndex.Length; i++)
+        {
+            scenes[i] = new SceneInfo(scenePathsByBuildIndex[i], i);
         }
         currentScene = scenes[0];
     }
