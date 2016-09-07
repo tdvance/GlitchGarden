@@ -167,7 +167,9 @@ public class LevelManager : MonoBehaviour
     void Update()
     {
 
+        
     }
+
     [Tooltip("This must be kept in sync with scene list in build settings for build/build and run to work.")]
     public string[] scenePathsByBuildIndex;
 
