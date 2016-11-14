@@ -367,17 +367,5 @@ __pycache__/
 # Cake - Uncomment if you are using it
 # tools/
 
-Assets/Standard Assets/
-Assets/Textures/Buildings/
-Assets/Textures/Decals/
-Assets/Textures/Bridge/
-Assets/Terrain/
-Assets/Skies/
-Assets/Textures/Ship/
-Assets/Blacksmith/
-Assets/Editor/
-Assets/CalibrationScene/
-Assets/PBSSpecular/
-Assets/PBSMetallic/
-Assets/PBS Materials Variety Pack/
-Assets/Resources/
+
+/AssetsFromDownload/
